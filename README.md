@@ -9,6 +9,11 @@ By implement RAG and Langchain, here I create a Chatbot with document loading to
 - Chroma Vector Store
 - Gradio Web UI
 
+ Note: This project requires access to IBM watsonx.ai.
+ If you do not have credentials, 
+ please refer to the code structure and architecture sections for implementation details.
+
+
 ### Structures
 
 
