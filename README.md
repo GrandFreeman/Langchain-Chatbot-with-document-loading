@@ -21,8 +21,8 @@ By implement RAG and Langchain, here I create a Chatbot with document loading to
 
 - First, you might need to create a virtual environment to operate it.
 
-pip install virtualenv
-virtualenv my_env # create a virtual environment named my_env
+pip install virtualenv \
+virtualenv my_env # create a virtual environment named my_env \
 source my_env/bin/activate # activate my_env
 
 - Second, you'll need to install necessary packages.
