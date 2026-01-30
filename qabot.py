@@ -94,12 +94,6 @@ def watsonx_embedding():
     )
     return watsonx_embedding
 
-## Vector db
-#def vector_database(chunks):
-#    embedding_model = watsonx_embedding()  ##Other model avaliable
-#    vectordb = Chroma.from_documents(documents=chunks, embedding=embedding_model)
-#    return vectordb
-
 ## Retriever
 
 def retriever(file): ## We can consider work with ParentDocumentRetriever.
