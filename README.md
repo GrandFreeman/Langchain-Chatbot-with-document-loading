@@ -16,6 +16,33 @@ Note: This project requires access to IBM watsonx.ai.
 
 ## Structures
 
+qabot\
+├── doc_load_embbed.py      # documents loading func. + embbeding func.\
+&emsp;&emsp;└── document_loader     # PDF / CSV / TXT / json loader
+
+├── qabot.py                # Gradio entry point \
+&emsp;&emsp;├── llm \
+&emsp;&emsp;&emsp;&emsp;├── watsonx_llm()    # get_llm() \
+&emsp;&emsp;&emsp;&emsp;├── model_id      			# model_id \
+&emsp;&emsp;&emsp;&emsp;└── project_id       # project_id \
+
+&emsp;&emsp;├── retrievers\
+&emsp;&emsp;&emsp;&emsp;├── parent_retriever  # ParentDocumentRetriever \
+&emsp;&emsp;&emsp;&emsp;├── embedding									# watsonx_embedding() \
+&emsp;&emsp;&emsp;&emsp;├── vectorstore 						# Chroma()\
+&emsp;&emsp;&emsp;&emsp;└── document_loader\
+
+&emsp;&emsp;├── qa_chains\
+&emsp;&emsp;&emsp;&emsp;├── llm\
+&emsp;&emsp;&emsp;&emsp;├── retriever\
+&emsp;&emsp;&emsp;&emsp;└── RetrievalQA          # RetrievalQA (chain_type="stuff")\
+
+&emsp;&emsp;├── qa_chains\
+&emsp;&emsp;&emsp;&emsp;└── gr.Interface\
+
+├── Setting up a virtual environment + requirements.txt   # Necessary libs\
+
+└── README.md
 
 ## How to operate
 
