@@ -69,9 +69,6 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
     )
 
     splits = document_loader(file)
-    #chunks = text_splitter(splits)
-    #vectordb = vector_database(chunks)
-    #retriever = vectordb.as_retriever() ## Can intergrate with other retriever.
     retriever.add_documents(splits)
     return retriever
 
