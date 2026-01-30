@@ -39,16 +39,6 @@ def document_loader(file):
     return loaded_document
 
 
-## Text splitter
-def text_splitter(data):
-    text_splitter = RecursiveCharacterTextSplitter(  ## Split by lang can work on python and json.
-        chunk_size=1000,
-        chunk_overlap=200,
-        length_function=len,
-    )
-    chunks = text_splitter.split_documents(data)
-    return chunks
-
 ## Embedding model
 def watsonx_embedding():
     embed_params = {
