@@ -15,7 +15,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 import gradio as gr
 
 from doc_load_embbed import document_loader
-from doc_load_embbed import text_splitter
 from doc_load_embbed import watsonx_embedding
 
 
