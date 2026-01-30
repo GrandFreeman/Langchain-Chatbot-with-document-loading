@@ -14,24 +14,30 @@ By implement RAG and Langchain, here I create a Chatbot with document loading to
  please refer to the code structure and architecture sections for implementation details.
 
 
-### Structures
+## Structures
 
 
-#### How to operate
+## How to operate
 
 - First, you might need to create a virtual environment to operate it.
 
-# Setting up a virtual environment
+### Setting up a virtual environment
 
 ```bash
 python3.11 -m venv my_env
 source my_env/bin/activate
 
 ```
+You should see "(my_env)" before your machine as the env had set up successfully.
 
 - Second, you'll need to install necessary packages.
 ```bash
 pip install -r requirements.txt
 ```
-- Third, 
+
+- Third, after libs installed, you can now excute the code.
+
+```bash
+python3.11 qabot.py
+```
 
