@@ -35,7 +35,7 @@ You should see "(my_env)" before your machine as the env had set up successfully
 pip install -r requirements.txt
 ```
 
-- Third, after libs installed, you can now complie the code.
+- Third, after libs installed, you can now compile and excute the code.
 
 ```bash
 python3.11 qabot.py
