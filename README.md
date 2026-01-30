@@ -9,7 +9,7 @@ By implement RAG and Langchain, here I create a Chatbot with document loading to
 - Chroma Vector Store
 - Gradio Web UI
 
- Note: This project requires access to IBM watsonx.ai.
+Note: This project requires access to IBM watsonx.ai.
  If you do not have credentials, 
  please refer to the code structure and architecture sections for implementation details.
 
@@ -40,4 +40,11 @@ pip install -r requirements.txt
 ```bash
 python3.11 qabot.py
 ```
+
+- Finally, through the following http site, you now can access the Langchain-Chatbot-with-document-loading, and ask it any question that you see fit.
+
+```bash
+http://127.0.0.1:7860
+```
+
 
