@@ -2,6 +2,7 @@ from ibm_watsonx_ai.foundation_models import ModelInference
 from ibm_watsonx_ai.metanames import GenTextParamsMetaNames as GenParams
 from ibm_watsonx_ai import Credentials
 from langchain_ibm import WatsonxLLM
+from langchain_community.vectorstores import Chroma
 
 import os
 from langchain.chains import RetrievalQA
@@ -9,6 +10,7 @@ from huggingface_hub import HfFolder
 
 from langchain.retrievers import ParentDocumentRetriever
 from langchain.storage import InMemoryStore
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 import gradio as gr
 
