@@ -27,9 +27,11 @@ By implement RAG and Langchain, here I create a Chatbot with document loading to
 python3.11 -m venv my_env
 source my_env/bin/activate
 
+```
+
 - Second, you'll need to install necessary packages.
-
+```bash
 pip install -r requirements.txt
-
+```
 - Third, 
 
