@@ -14,7 +14,7 @@ Note: This project requires access to IBM watsonx.ai.
  please refer to the code structure and architecture sections for implementation details.
 
 
-## Structures
+## Contents of code
 
 qabot\
 ├── doc_load_embbed.py      # documents loading func. + embbeding func.\
@@ -37,7 +37,7 @@ qabot\
 &emsp;&emsp;&emsp;&emsp;├── retriever\
 &emsp;&emsp;&emsp;&emsp;└── RetrievalQA          # RetrievalQA (chain_type="stuff")\
 
-&emsp;&emsp;├── qa_chains\
+&emsp;&emsp;├── gradio\
 &emsp;&emsp;&emsp;&emsp;└── gr.Interface\
 
 ├── Setting up a virtual environment + requirements.txt   # Necessary libs\
