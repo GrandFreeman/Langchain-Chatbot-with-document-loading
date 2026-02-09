@@ -73,5 +73,5 @@ python3.11 qabot.py
 ```bash
 http://---.-.-.-:7860
 ```
-
-
+The expected format is shown in the figure below. 
+![image](chat_demo.jpg)
