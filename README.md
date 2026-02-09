@@ -68,10 +68,10 @@ pip install -r requirements.txt
 python3.11 qabot.py
 ```
 
-- Finally, through the following http site, you now can access the Langchain-Chatbot-with-document-loading, and ask it any question that you see fit.
+- Finally, through the following http site at your local terminal, you now can access the Langchain-Chatbot-with-document-loading, and ask it any question that you see fit.
 
 ```bash
-http://127.0.0.1:7860
+http://---.-.-.-:7860
 ```
 
 
