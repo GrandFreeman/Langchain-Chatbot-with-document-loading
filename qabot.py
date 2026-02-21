@@ -42,7 +42,7 @@ def get_llm():
     return watsonx_llm
 
 ## Retriever
-vectorstore_global = None
+retriever_global = None
 
 #def build_vectorstore(file):
 
