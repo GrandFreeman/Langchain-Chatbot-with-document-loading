@@ -52,7 +52,7 @@ vectorstore_global = None
 def retriever(file): ## We can consider work with ParentDocumentRetriever.
 
 # The storage layer for the parent documents
-    global vectorstore_global
+    global retriever_global
     parent_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=100,
@@ -62,33 +62,36 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
         chunk_size=200,
         chunk_overlap=20,
     )
+
+    splits = document_loader(file)
     
     embedding = watsonx_embedding()
 
-    vectorstore = Chroma(
-    collection_name="split_parents", embedding_function=embedding
+    vectorstore = Chroma.from_documents(
+        documents=splits, collection_name="split_parents", embedding_function=embedding
     )
     
     store = InMemoryStore()
 
-    retriever = ParentDocumentRetriever(
+    retriever_global = ParentDocumentRetriever(
     vectorstore=vectorstore,
     docstore=store,
     child_splitter=child_splitter,
     parent_splitter=parent_splitter,
     )
-
-    
-    splits = document_loader(file) 
-    retriever.add_documents(splits)
-    return retriever
+ 
+    retriever_global.add_documents(splits)
+    return retriever_global
 
 ## QA Chain
 def retriever_qa(retriever, query):
+    global retriever_global
+    if retriever_global is None:
+        return "請先上傳 PDF 並建立 retriever"
     llm = get_llm()
     qa = RetrievalQA.from_chain_type(llm=llm, 
                                     chain_type="stuff", 
-                                    retriever=retriever, 
+                                    retriever=retriever_global, 
                                     return_source_documents=False)
     response = qa.invoke(query)
     return response['result']
