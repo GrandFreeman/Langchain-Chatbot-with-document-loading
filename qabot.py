@@ -27,7 +27,7 @@ warnings.filterwarnings('ignore')
 
 ## LLM
 def get_llm():
-    model_id = 'ibm/granite-3-2-8b-instruct'
+    model_id = 'ibm/granite-3.x-vision-instruct'
     parameters = {
         GenParams.MAX_NEW_TOKENS: 256,  
         GenParams.TEMPERATURE: 0.5,
@@ -42,8 +42,17 @@ def get_llm():
     return watsonx_llm
 
 ## Retriever
+vectorstore_global = None
+
+#def build_vectorstore(file):
+
+    #return vectorstore, parent_splitter, child_splitter
+
 
 def retriever(file): ## We can consider work with ParentDocumentRetriever.
+
+# The storage layer for the parent documents
+    global vectorstore_global
     parent_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=100,
@@ -53,13 +62,13 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
         chunk_size=200,
         chunk_overlap=20,
     )
-
+    
     embedding = watsonx_embedding()
 
     vectorstore = Chroma(
     collection_name="split_parents", embedding_function=embedding
     )
-# The storage layer for the parent documents
+    
     store = InMemoryStore()
 
     retriever = ParentDocumentRetriever(
@@ -69,17 +78,17 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
     parent_splitter=parent_splitter,
     )
 
-    splits = document_loader(file)
+    
+    splits = document_loader(file) 
     retriever.add_documents(splits)
     return retriever
 
 ## QA Chain
-def retriever_qa(file, query):
+def retriever_qa(retriever, query):
     llm = get_llm()
-    retriever_obj = retriever(file)
     qa = RetrievalQA.from_chain_type(llm=llm, 
                                     chain_type="stuff", 
-                                    retriever=retriever_obj, 
+                                    retriever=retriever, 
                                     return_source_documents=False)
     response = qa.invoke(query)
     return response['result']
