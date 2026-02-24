@@ -5,7 +5,9 @@ from langchain_ibm import WatsonxLLM
 from langchain_community.vectorstores import Chroma
 
 import os
-from langchain.chains import RetrievalQA
+from langchain.prompts import ChatPromptTemplate
+from langchain.schema.output_parser import StrOutputParser
+from langchain.schema.runnable import RunnablePassthrough
 from huggingface_hub import HfFolder
 
 from langchain.retrievers import ParentDocumentRetriever
@@ -27,7 +29,7 @@ warnings.filterwarnings('ignore')
 
 ## LLM
 def get_llm():
-    model_id = 'ibm/granite-3-2-8b-instruct'
+    model_id = 'ibm/granite3.3-vision:2b'
     parameters = {
         GenParams.MAX_NEW_TOKENS: 256,  
         GenParams.TEMPERATURE: 0.5,
@@ -77,11 +79,27 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
 def retriever_qa(file, query):
     llm = get_llm()
     retriever_obj = retriever(file)
-    qa = RetrievalQA.from_chain_type(llm=llm, 
-                                    chain_type="stuff", 
-                                    retriever=retriever_obj, 
-                                    return_source_documents=False)
-    response = qa.invoke(query)
+    
+    prompt = ChatPromptTemplate.from_template("""
+    根據以下內容回答問題：
+
+    {context}
+
+    問題：
+    {question}
+    """)
+
+    chain = (
+        {
+            "context": retriever_obj,
+            "question": RunnablePassthrough()
+        }
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+
+    response = chain.invoke(query)
     return response['result']
 
 # Create Gradio interface
