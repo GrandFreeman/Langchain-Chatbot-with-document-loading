@@ -1,5 +1,13 @@
 # Langchain-Chatbot-with-document-loading
-By implement RAG and Langchain, here I create a Chatbot with document loading to proceed some basic mession, such as summery generation or others.
+
+### About this "Ver.1.1" branch:
+
+- More proper integration with the Langchain.
+  - By implement Langchain LCEL workflow, the current chatbot is capable not only RAG operation, but also normal chat with the LLM model! 
+- Not a goldfish anymore.
+  - By "memorize" the chat history, the chatbot is now capable remembering previous operation's contents.
+- Image support will came very soon.
+
 
 ## Features in this project
 
@@ -32,10 +40,9 @@ qabot\
 &emsp;&emsp;&emsp;&emsp;├── vectorstore 						# Chroma()\
 &emsp;&emsp;&emsp;&emsp;└── document_loader\
 
-&emsp;&emsp;├── qa_chains\
+&emsp;&emsp;├── qa_chains + globle chatmemory\
 &emsp;&emsp;&emsp;&emsp;├── llm\
-&emsp;&emsp;&emsp;&emsp;├── retriever\
-&emsp;&emsp;&emsp;&emsp;└── RetrievalQA          # RetrievalQA (chain_type="stuff")\
+&emsp;&emsp;&emsp;&emsp;└── LCEL structure # prompt, chain, chat_memory\ 
 
 &emsp;&emsp;├── gradio\
 &emsp;&emsp;&emsp;&emsp;└── gr.Interface\
