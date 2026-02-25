@@ -33,7 +33,7 @@ warnings.filterwarnings('ignore')
 
 ## LLM
 def get_llm():
-    model_id = 'ibm/granite3.3-vision:2b'
+    model_id = 'meta-llama/llama-3-2-90b-vision-instruct'
     parameters = {
         GenParams.MAX_NEW_TOKENS: 256,  
         GenParams.TEMPERATURE: 0.5,
