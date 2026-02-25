@@ -85,8 +85,6 @@ chat_history = ChatMessageHistory()
 def retriever_qa(file, query):
 
     llm = get_llm()
-  
-    retriever_obj = retriever(file)
 
     prompt_wo = ChatPromptTemplate.from_messages([
     ("system", "請根據以下內容回答問題。"),
@@ -113,6 +111,8 @@ def retriever_qa(file, query):
             | StrOutputParser()
         )
     else:
+    
+        retriever_obj = retriever(file)
         chain = (
             {
                 "context": retriever_obj | format_docs,
