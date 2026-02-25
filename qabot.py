@@ -51,7 +51,7 @@ def get_llm():
 
 def retriever(file): ## We can consider work with ParentDocumentRetriever.
     if file is None:
-        raise ValueError("No file uploaded")
+        return None
     parent_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=100,
