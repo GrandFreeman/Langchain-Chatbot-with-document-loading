@@ -83,11 +83,9 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
 chat_history = ChatMessageHistory()
 
 def retriever_qa(file, query):
-    llm = get_llm()
 
-    #if file is None:
-    #    return llm.invoke(query).content
-    
+    llm = get_llm()
+  
     retriever_obj = retriever(file)
 
     prompt_wo = ChatPromptTemplate.from_messages([
