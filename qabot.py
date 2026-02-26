@@ -83,10 +83,22 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
 
 ## QA Chain
 chat_history = ChatMessageHistory()
+retriever_obj = None
+current_file = None
 
 def retriever_qa(file, query):
 
+    global retriever_obj
+    global current_file
+
     llm = get_llm()
+
+    # 只有「第一次」或「檔案換了」才重建
+    if file is not None:
+        if retriever_obj is None or file != current_file:
+            print("BUILD RETRIEVER")
+            retriever_obj = retriever(file)
+            current_file = file
 
     prompt_wo = ChatPromptTemplate.from_messages([
     ("system", "請根據以下內容回答問題。"),
@@ -99,22 +111,10 @@ def retriever_qa(file, query):
     MessagesPlaceholder("history"),
     ("human", "{question}")
     ])
-
+    
     def format_docs(docs):
         return "\n\n".join(doc.page_content for doc in docs)
-    if file is None:
-        chain = (
-            {
-                "question": RunnablePassthrough(),
-                "history": lambda _: chat_history.messages
-            }
-            | prompt_wo
-            | llm
-            | StrOutputParser()
-        )
-    else:
-    
-        retriever_obj = retriever(file)
+    if retriever_obj is not None:
         chain = (
             {
                 "context": retriever_obj | format_docs,
@@ -125,11 +125,22 @@ def retriever_qa(file, query):
             | llm
             | StrOutputParser()
         )
+        
+    else:
+        chain = (
+            {
+                "question": RunnablePassthrough(),
+                "history": lambda _: chat_history.messages
+            }
+            | prompt_wo
+            | llm
+            | StrOutputParser()
+        )
 
     response = chain.invoke(query)
     chat_history.add_user_message(query)
     chat_history.add_ai_message(response)
-    return response#['result']
+    return response
 
 # Create Gradio interface
 rag_application = gr.Interface(
