@@ -83,22 +83,27 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
 
 ## QA Chain
 chat_history = ChatMessageHistory()
-retriever_obj = None
+retriever_pool = {}
 current_file = None
 
 def retriever_qa(file, query):
 
-    global retriever_obj
+    global retriever_pool
     global current_file
 
     llm = get_llm()
 
     # 只有「第一次」或「檔案換了」才重建
     if file is not None:
-        if retriever_obj is None or file != current_file:
-            print("BUILD RETRIEVER")
-            retriever_obj = retriever(file)
-            current_file = file
+
+        if file not in retriever_pool:
+            print("BUILD NEW RETRIEVER")
+            retriever_pool[file] = retriever(file)
+
+        current_file = file
+
+    # 取得目前使用的 retriever
+    retriever_obj = retriever_pool.get(current_file)
 
     prompt_wo = ChatPromptTemplate.from_messages([
     ("system", "請根據以下內容回答問題。"),
