@@ -6,7 +6,7 @@
   - By implement Langchain LCEL workflow, the current chatbot is capable not only RAG operation, but also normal chat with the LLM model! 
 - Not a goldfish anymore.
   - By "memorize" the chat history, the chatbot is now capable remembering previous operation's contents.
-  - ### For "Ver.1.1.1", now the chatbot can retain retriever information for rest of your operation.
+  - ### For "Ver.1.1.1", now the chatbot can retain retriever information for rest of your operation, and support multi-upload(lead to Retrieval Pool) as well.
 - Image support will came very soon.
 
 
