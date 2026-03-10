@@ -84,26 +84,46 @@ def retriever(file): ## We can consider work with ParentDocumentRetriever.
 ## QA Chain
 chat_history = ChatMessageHistory()
 retriever_pool = {}
-current_file = None
+picture_pool = {}
+
 
 def retriever_qa(file, query):
 
     global retriever_pool
-    global current_file
+    global picture_pool
+    #global retriever_obj
+    #global current_pic
+
+    retriever_obj = []
+    current_pic = []
 
     llm = get_llm()
-
+    
+    # 當前檔案性質
+    ext = os.path.splitext(file)[1].lower() if file else None
+    
     # 只有「第一次」或「檔案換了」才重建
     if file is not None:
+        if file not in retriever_pool and file not in picture_pool:
+            
+            if ext in [".png",".jpg"]:
+                print("Store NEW Picture")
+                picture_pool[file] = file
+            else:
+                print("BUILD NEW RETRIEVER")
+                retriever_pool[file] = retriever(file)
 
-        if file not in retriever_pool:
-            print("BUILD NEW RETRIEVER")
-            retriever_pool[file] = retriever(file)
+    for r in picture_pool.values():
+        current_pic.extend(r)
+        
+    for r in retriever_pool.values():
+        retriever_obj.extend(r.get_relevant_documents(query))
 
-        current_file = file
 
     # 取得目前使用的 retriever
-    retriever_obj = retriever_pool.get(current_file)
+    #retriever_obj = retriever_pool.get(current_file)
+
+
 
     prompt_wo = ChatPromptTemplate.from_messages([
     ("system", "請根據以下內容回答問題。"),
@@ -116,31 +136,64 @@ def retriever_qa(file, query):
     MessagesPlaceholder("history"),
     ("human", "{question}")
     ])
+
+    prompt_vis = ChatPromptTemplate.from_messages([
+    ("system", "請根據以下內容或圖片回答問題。\n\n{context}"),
+    MessagesPlaceholder("history"),
+    ("human", [
+    {"type": "text", "text": "{question}"},
+    {"type": "image_url", "image_url": "{file.name()}"}
+    ])
+    ])
     
     def format_docs(docs):
         return "\n\n".join(doc.page_content for doc in docs)
     if retriever_obj is not None:
-        chain = (
+        if ext in [".png",".jpg"]:
+                    chain = (
             {
-                "context": retriever_obj | format_docs,
                 "question": RunnablePassthrough(),
-                "history": lambda _: chat_history.messages
+                "history": lambda _: chat_history.messages,
+                "image_path": lambda _: current_pic
             }
-            | prompt
+            | prompt_vis
             | llm
             | StrOutputParser()
-        )
+            )
+        else:
+            chain = (
+                {
+                    "context": retriever_obj | format_docs,
+                    "question": RunnablePassthrough(),
+                    "history": lambda _: chat_history.messages
+                }
+                | prompt
+                | llm
+                | StrOutputParser()
+            )
         
     else:
-        chain = (
+        if ext in [".png",".jpg"]:
+                    chain = (
             {
                 "question": RunnablePassthrough(),
-                "history": lambda _: chat_history.messages
+                "history": lambda _: chat_history.messages,
+                "image_path": lambda _: current_pic
             }
-            | prompt_wo
+            | prompt_vis
             | llm
             | StrOutputParser()
-        )
+            )
+        else:
+            chain = (
+                {
+                    "question": RunnablePassthrough(),
+                    "history": lambda _: chat_history.messages
+                }
+                | prompt_wo
+                | llm
+                | StrOutputParser()
+            )
 
     response = chain.invoke(query)
     chat_history.add_user_message(query)
@@ -152,7 +205,7 @@ rag_application = gr.Interface(
     fn=retriever_qa,
     allow_flagging="never",
     inputs=[
-        gr.File(label="Upload PDF File", file_count="single", file_types=['.pdf'], type="filepath"),  # Drag and drop file upload
+        gr.File(label="Upload PDF File", file_count="single", file_types=['.pdf', '.csv', '.json', '.txt', '.md',".png",".jpg"], type="filepath"),  # Drag and drop file upload
         gr.Textbox(label="Input Query", lines=2, placeholder="Type your question here...")
     ],
     outputs=gr.Textbox(label="Output"),
