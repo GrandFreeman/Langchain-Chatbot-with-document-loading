@@ -17,11 +17,46 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.document_loaders import Docx2txtLoader
 from langchain_community.document_loaders import UnstructuredFileLoader
 
+from sentence_transformers import SentenceTransformer
 
 
 ## Document loader
 def document_loader(file):
     ext = os.path.splitext(file.name)[1].lower()
+
+    if ext in [".png",".jpg"]:
+
+        image_path = file.name
+
+        # 1 vision caption
+        caption = image_caption_model(image_path)
+
+        pic_docs = []
+
+        # text document (for text embedding)
+        pic_docs.append(
+            Document(
+                page_content=caption,
+                metadata={
+                    "type":"image_caption",
+                    "image_path":image_path
+                }
+            )
+        )
+
+        # image document (for image embedding)
+        pic_docs.append(
+            Document(
+                page_content="IMAGE_DATA",
+                metadata={
+                    "type":"image",
+                    "image_path":image_path
+                }
+            )
+        )
+
+        return pic_docs
+    
     if ext == ".pdf":
         loader = PyPDFLoader(file.name)
     elif ext == ".csv":
@@ -54,3 +89,10 @@ def watsonx_embedding():
         params=embed_params,
     )
     return watsonx_embedding
+
+
+clip_model = SentenceTransformer("clip-ViT-B-32")
+
+def image_embedding(image_path):
+    
+    return clip_model.encode(Image.open(image_path))
