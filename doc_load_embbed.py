@@ -17,6 +17,7 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.document_loaders import Docx2txtLoader
 from langchain_community.document_loaders import UnstructuredFileLoader
 
+from langchain.schema import Document
 from sentence_transformers import SentenceTransformer
 
 
@@ -26,36 +27,42 @@ def document_loader(file):
 
     if ext in [".png",".jpg"]:
 
-        image_path = file.name
-
         # 1 vision caption
-        caption = image_caption_model(image_path)
+        #caption = image_caption_model(file.name)
 
-        pic_docs = []
+        #pic_docs = []
 
         # text document (for text embedding)
-        pic_docs.append(
-            Document(
-                page_content=caption,
-                metadata={
-                    "type":"image_caption",
-                    "image_path":image_path
-                }
-            )
-        )
+        #pic_docs.append(
+        #    Document(
+        #        page_content=caption,
+        #        metadata={
+        #            "type":"image_caption",
+        #            "image_path":file.name
+        #        }
+        #    )
+        #)
 
         # image document (for image embedding)
-        pic_docs.append(
-            Document(
-                page_content="IMAGE_DATA",
-                metadata={
-                    "type":"image",
-                    "image_path":image_path
-                }
-            )
-        )
+        #pic_docs.append(
+        #    Document(
+        #        page_content="IMAGE_DATA",
+        #        metadata={
+        #            "type":"image",
+        #            "image_path":file.name
+        #        }
+        #    )
+        #)
 
-        return pic_docs
+        #return pic_docs
+        return [Document(
+                    page_content="IMAGE_DATA",
+                    metadata={
+                        "type":"image",
+                        "image_path":file.name
+                        }
+                    )
+                ]
     
     if ext == ".pdf":
         loader = PyPDFLoader(file.name)
